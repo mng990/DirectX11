@@ -28,14 +28,14 @@ private:
 
 private:
 	// DX
-	
+
 	// Device & SwapChain
-	
+
 	// ComPtr = Com 객체를 할당하는 ptr
 	// ComPtr로 할당, 소멸, 레퍼런스 카운트를 자동으로 관리 (스마트 포인터와 유사)
-	
+
 	// 리소스를 생성하는 팩토리
-	ComPtr<ID3D11Device> _device = nullptr; 
+	ComPtr<ID3D11Device> _device = nullptr;
 
 	// 리소스를 렌더링 파이프라인에 전달
 	ComPtr<ID3D11DeviceContext> _deviceContext = nullptr;

@@ -17,6 +17,10 @@ void Game::Init(HWND hwnd)
 	_width = GWinSizeX;
 	_height = GWinSizeY;
 
+	CreateDeviceAndSwapChain();
+	CreateRenderTargetView();
+	SetViewport();
+
 	// TODO
 }
 
@@ -28,6 +32,11 @@ void Game::Update()
 void Game::Render()
 {
 	RenderBegin();
+
+	// IA - VS - RS - PS - OM
+	{
+
+	}
 
 	RenderEnd();
 }
@@ -45,7 +54,7 @@ void Game::RenderBegin()
 void Game::RenderEnd()
 {
 	// [ ] <- [ ]
-	HRESULT hr = _swapChain->Present(1,0);
+	HRESULT hr = _swapChain->Present(1, 0);
 	CHECK(hr);
 }
 
@@ -54,10 +63,10 @@ void Game::CreateDeviceAndSwapChain()
 	DXGI_SWAP_CHAIN_DESC desc;
 
 	// Swap Chain Description을 0으로 초기화 후 재할당
-	ZeroMemory(&desc, sizeof(desc)); 
+	ZeroMemory(&desc, sizeof(desc));
 	{
 		// 픽셀을 담는 버퍼, 화소수랑 동일
-		desc.BufferDesc.Width = _width; 
+		desc.BufferDesc.Width = _width;
 		desc.BufferDesc.Height = _height;
 
 		// 주사율
@@ -82,7 +91,9 @@ void Game::CreateDeviceAndSwapChain()
 		desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	}
 
-	
+	//::memset(&desc, sizeof(desc);
+
+
 	// _device.Get(): device 반환(ComPtr)
 	// _device.GetAddressOf(): device의 주소값 반환 (&Comptr) 
 
@@ -111,7 +122,7 @@ void Game::CreateRenderTargetView()
 
 	// 텍스처
 	ComPtr<ID3D11Texture2D> backBuffer = nullptr;
-	
+
 	// 텍스처를 스왑체인의 후면 버퍼에 넣어줌 (렌더링이 될 백버퍼)
 	hr = _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)backBuffer.GetAddressOf());
 	CHECK(hr);

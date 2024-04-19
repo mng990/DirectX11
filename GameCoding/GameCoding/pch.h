@@ -19,3 +19,21 @@ using namespace std;
 #include <d3dcompiler.h>
 #include <wrl.h>
 #include <DirectXMath.h>
+#include <DirectXTex/DirectXTex.h>
+#include <DirectXTex/DirectXTex.inl>
+// 프로젝트 속성 -> C/C++ -> 추가 디렉토리에서 탐색
+
+using namespace DirectX;
+using namespace Microsoft::WRL;
+
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+
+#ifdef _DEBUG
+#pragma comment(lib, "DirectXTex\\DirectXTex_debug.lib")
+#else
+#pragma comment(lib, "DirectXTex\DirectXTex.lib")
+#endif
+
+
+#define CHECK(p) assert(SUCCEEDED(p))

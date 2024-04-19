@@ -5,10 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="소스 파일\99. Headers">
       <UniqueIdentifier>{ba2e96f3-c76b-4822-a752-a6d9197fd0bc}</UniqueIdentifier>
     </Filter>
@@ -17,6 +13,10 @@
     </Filter>
     <Filter Include="소스 파일\99. Headers\Andromeda">
       <UniqueIdentifier>{694fd2b7-6b98-4c2d-b89c-e416ceec34c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -50,15 +50,15 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameCoding.rc">
-      <Filter>리소스 파일</Filter>
+      <Filter>소스 파일\리소스 파일</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
-      <Filter>리소스 파일</Filter>
+      <Filter>소스 파일\리소스 파일</Filter>
     </Image>
     <Image Include="GameCoding.ico">
-      <Filter>리소스 파일</Filter>
+      <Filter>소스 파일\리소스 파일</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
