@@ -1,0 +1,3 @@
+*.ipch filter=lfs diff=lfs merge=lfs -text
+GameCoding/.vs/GameCoding/v17/ipch/AutoPCH/7a70988c81185e2b/GAMECODING.ipch filter=lfs diff=lfs merge=lfs -text
+GameCoding/.vs/GameCoding/v17/ipch/10cafa4ed6bf912e.ipch filter=lfs diff=lfs merge=lfs -text
