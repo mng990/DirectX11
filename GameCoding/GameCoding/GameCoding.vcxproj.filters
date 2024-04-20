@@ -18,6 +18,9 @@
     <Filter Include="소스 파일\99. Headers\Andromeda">
       <UniqueIdentifier>{c09d2f04-473f-4cb2-b632-86148556e30f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\98.Shaders">
+      <UniqueIdentifier>{43c6853c-e82e-4d5e-9fd2-a88a75530ac0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameCoding.h">
@@ -71,5 +74,10 @@
     <ClCompile Include="Game.cpp">
       <Filter>소스 파일\01. Main</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Default.hlsl">
+      <Filter>소스 파일\98.Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
