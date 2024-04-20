@@ -2,7 +2,6 @@
 #include "framework.h"
 #include "GameCoding.h"
 #include "Game.h"
-#include <iostream>
 
 #define MAX_LOADSTRING 100
 
@@ -10,6 +9,7 @@
 HINSTANCE hInst;
 HWND hWnd;
 
+// 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -30,8 +30,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     game.Init(hWnd);
 
     MSG msg = {};
- 
-    // 기본 메시지 루프
+
+    // 기본 메시지 루프입니다:
     while (msg.message != WM_QUIT)
     {
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -140,6 +140,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
+        // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
         EndPaint(hWnd, &ps);
     }
     break;
