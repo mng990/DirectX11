@@ -47,6 +47,7 @@ void Game::Render()
 		
 		// IA
 		_deviceContext->IASetVertexBuffers(0, 1, _vertexBuffer.GetAddressOf(), &stride, &offset);
+		_deviceContext->IASetIndexBuffer(_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, offset);
 		_deviceContext->IASetInputLayout(_inputLayout.Get());
 		_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -59,7 +60,8 @@ void Game::Render()
 		_deviceContext->PSSetShader(_pixelShader.Get(), nullptr, 0);
 
 		// OM
-		_deviceContext->Draw(_vertices.size(), 0);
+		//_deviceContext->Draw(_vertices.size(), 0);
+		_deviceContext->DrawIndexed(_indices.size(), 0, 0);
 	}
 
 	RenderEnd();
@@ -77,6 +79,7 @@ void Game::RenderBegin()
 
 void Game::RenderEnd()
 {
+	// 화면 출력
 	HRESULT hr = _swapChain->Present(1, 0);
 	CHECK(hr);
 }
@@ -170,16 +173,19 @@ void Game::CreateGeometry()
 {
 	// VertexData
 	{
-		_vertices.resize(3);
+		_vertices.resize(4);
 
 		_vertices[0].position = Vec3(-0.5f, -0.5f, 0.f);
 		_vertices[0].color = Color(0.5f, 0.f, 1.f, 0.5f);
 
-		_vertices[1].position = Vec3(0.f, 0.5f, 0.f);
+		_vertices[1].position = Vec3(-0.5f, 0.5f, 0.f);
 		_vertices[1].color = Color(0.f, 1.f, 1.f, 0.5f);
 
 		_vertices[2].position = Vec3(0.5f, -0.5f, 0.f);
 		_vertices[2].color = Color(0.f, 0.f, 1.f, 0.5f);
+
+		_vertices[3].position = Vec3(0.5f, 0.5f, 0.f);
+		_vertices[3].color = Color(0.f, 0.f, 1.f, 0.5f);
 	}
 
 	// VertexBuffer
@@ -201,9 +207,38 @@ void Game::CreateGeometry()
 		// vertex의 시작 주소([CPU <-> RAM])를 Usage([GPU <-> VRAM])로 전달 
 		data.pSysMem = _vertices.data();
 
-		_device->CreateBuffer(&desc, &data, _vertexBuffer.GetAddressOf());
+		HRESULT hr = _device->CreateBuffer(&desc, &data, _vertexBuffer.GetAddressOf());
+		CHECK(hr);
 	}
 
+
+	// IndexData
+	{
+		_indices = {0, 1, 2, 2, 1, 3};
+	}
+
+	// IndexBuffer
+	{
+		D3D11_BUFFER_DESC desc;
+		ZeroMemory(&desc, sizeof(desc));
+
+		// RW를 시행할 장비를 설정하는 옵션 (GPU or CPU) 
+		desc.Usage = D3D11_USAGE_IMMUTABLE;
+		// Buffer의 용도 설정
+		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		// 버퍼 사이즈
+		desc.ByteWidth = (uint32)(sizeof(uint32) * _indices.size());
+
+
+		D3D11_SUBRESOURCE_DATA data;
+		ZeroMemory(&data, sizeof(data));
+
+		// index의 시작 주소([CPU <-> RAM])를 Usage([GPU <-> VRAM])로 전달 
+		data.pSysMem = _indices.data();
+
+		HRESULT hr = _device->CreateBuffer(&desc, &data, _indexBuffer.GetAddressOf());
+		CHECK(hr);
+	}
 }
 
 void Game::CreateInputLayout()
