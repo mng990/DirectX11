@@ -25,9 +25,16 @@ private:
 private:
 	void CreateGeometry();
 	void CreateInputLayout();
+	
 	void CreateVS();
 	void CreatePS();
+
+	void CreateRasterizerState();
+	void CreateSamplerState();
+	void CreateBlendState();
 	void CreateSRV();
+
+	void CreateConstantBuffer();
 
 	void LoadShaderFromFile(const wstring& path, const string& name, const string& version, ComPtr<ID3DBlob>& blob);
 
@@ -63,7 +70,7 @@ private:
 	float _clearColor[4] = { 0.f, 0.f, 0.f, 0.f };
 
 private:
-	// Geometry
+	// Geometry(Mesh)
 	vector<Vertex> _vertices;
 	ComPtr<ID3D11Buffer> _vertexBuffer = nullptr;
 	ComPtr<ID3D11InputLayout> _inputLayout = nullptr;
@@ -74,13 +81,29 @@ private:
 	ComPtr<ID3D11VertexShader> _vertexShader = nullptr;
 	ComPtr<ID3DBlob> _vsBlob = nullptr;
 
+	// RS
+	ComPtr<ID3D11RasterizerState> _rasterizerState = nullptr;
+
 	// PS
 	ComPtr<ID3D11PixelShader> _pixelShader = nullptr;
 	ComPtr<ID3DBlob> _psBlob = nullptr;
 
-	//SRV
-	ComPtr<ID3D11ShaderResourceView> _shaderResourceView = nullptr;
 
+	// SamplerState
+	ComPtr<ID3D11SamplerState> _samplerState = nullptr;
+
+	// BlenderState
+	ComPtr<ID3D11BlendState> _blenderState = nullptr;
+
+	//SRV (Shader Resource View)
+	ComPtr<ID3D11ShaderResourceView> _shaderResourceView = nullptr;
+	ComPtr<ID3D11ShaderResourceView> _shaderResourceView2 = nullptr;
+
+
+private:
+	// SRT (Scale Rotation Translation)
+	TransformData _transformData;
+	ComPtr<ID3D11Buffer> _constantBuffer = nullptr;
 	// [CPU <-> RAM] [GPU <-> VRAM]
 
 };

@@ -13,17 +13,24 @@ struct VS_OUTPUT
     float2 uv : TEXCOORD;
 };
 
+cbuffer TransformData : register(b0)
+{
+    float4 offset;
+}
+
 // IA - VS - RS - PS - OM
 VS_OUTPUT VS(VS_INPUT input)
 {
     VS_OUTPUT output;
-    output.position = input.position;
+    // 물체의 위치 정보 + 이동 정보
+    output.position = input.position + offset; 
     output.uv = input.uv;
 
     return output;
 }
 
 Texture2D texture0 : register(t0);
+Texture2D texture1 : register(t1);
 SamplerState sampler0 : register(s0);
 
 float4 PS(VS_OUTPUT input) : SV_Target

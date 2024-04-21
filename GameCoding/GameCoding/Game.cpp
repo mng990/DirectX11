@@ -24,11 +24,35 @@ void Game::Init(HWND hwnd)
 	CreateInputLayout();
 	CreatePS();
 
+
+	CreateRasterizerState();
+	CreateSamplerState();
+	CreateBlendState();
+
 	CreateSRV();
+
+	CreateConstantBuffer();
 }
 
 void Game::Update()
 {
+	// SRT(Scale Rotation Translation)
+	_transformData.offset.x += 0.003f;
+	_transformData.offset.y += 0.003f;
+
+	// CPU(_transformData) -> GPU로 데이터 복사
+	D3D11_MAPPED_SUBRESOURCE subResource;
+	ZeroMemory(&subResource, sizeof(subResource));
+
+	// CPU <-> GPU 간 데이터 이동 (핵심!!)
+	// constantBuffer 생성
+	// constantBuffer + subResource 결합
+	// transformData를 subResource로 복사
+	// constantBuffer + subResource 결합 해제
+	// constantBuffer와 VS 연결
+	_deviceContext->Map(_constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
+	::memcpy(subResource.pData, &_transformData, sizeof(_transformData));
+	_deviceContext->Unmap(_constantBuffer.Get(), 0);
 }
 
 void Game::Render()
@@ -47,14 +71,22 @@ void Game::Render()
 
 		// VS
 		_deviceContext->VSSetShader(_vertexShader.Get(), nullptr, 0);
+		_deviceContext->VSSetConstantBuffers(0,1,_constantBuffer.GetAddressOf());
+
 
 		// RS
+		_deviceContext->RSSetState(_rasterizerState.Get());
+
 
 		// PS
+		// Shader 리소스를 PS에 전달
 		_deviceContext->PSSetShader(_pixelShader.Get(), nullptr, 0);
 		_deviceContext->PSSetShaderResources(0, 1, _shaderResourceView.GetAddressOf());
+		//_deviceContext->PSSetShaderResources(1, 1, _shaderResourceView2.GetAddressOf());
+		_deviceContext->PSSetSamplers(0, 1, _samplerState.GetAddressOf());
 
 		// OM
+		// 인덱스 버퍼를 지원하는 Draw를 시행합니다.
 		_deviceContext->DrawIndexed(_indices.size(), 0, 0);
 	}
 
@@ -159,7 +191,7 @@ void Game::CreateGeometry()
 	{
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));
-		desc.Usage = D3D11_USAGE_IMMUTABLE;
+		desc.Usage = D3D11_USAGE_IMMUTABLE; 
 		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		desc.ByteWidth = (uint32)(sizeof(Vertex) * _vertices.size());
 
@@ -199,6 +231,7 @@ void Game::CreateInputLayout()
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		// SemanticName을 기존 COLOR에서 TEXCOORD로 수정합니다
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
@@ -221,6 +254,52 @@ void Game::CreatePS()
 }
 
 
+void Game::CreateRasterizerState()
+{
+	D3D11_RASTERIZER_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+
+	desc.FillMode = D3D11_FILL_SOLID;
+	// 후면으로 인식하면 렌더링 X
+	desc.CullMode = D3D11_CULL_BACK; 
+	// 도형의 vertex가 시계 방향이면 앞면(front), 아니라면 후면(back)
+	desc.FrontCounterClockwise = false; 
+
+
+	HRESULT hr = _device->CreateRasterizerState(&desc, _rasterizerState.GetAddressOf());
+	CHECK(hr);
+}
+
+void Game::CreateSamplerState()
+{
+	D3D11_SAMPLER_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+	
+	//Sampling을 추출하는 규약들
+	desc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+	desc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+	desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+
+	desc.BorderColor[0] = 1;
+	desc.BorderColor[1] = 0;
+	desc.BorderColor[2] = 0;
+	desc.BorderColor[3] = 1;
+	desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	desc.MaxAnisotropy = 16;
+	desc.MaxLOD = FLT_MAX;
+	desc.MinLOD = FLT_MIN;
+	desc.MipLODBias = 0.f;
+
+
+	HRESULT hr = _device->CreateSamplerState(&desc, _samplerState.GetAddressOf());
+	CHECK(hr);
+}
+
+void Game::CreateBlendState()
+{
+}
+
 void Game::CreateSRV()
 {
 	DirectX::TexMetadata md;
@@ -229,6 +308,28 @@ void Game::CreateSRV()
 	CHECK(hr);
 
 	hr = ::CreateShaderResourceView(_device.Get(), img.GetImages(), img.GetImageCount(), md, _shaderResourceView.GetAddressOf());
+	CHECK(hr);
+
+	hr = ::LoadFromWICFile(L"Rathalos.png", WIC_FLAGS_NONE, &md, img);
+	CHECK(hr);
+
+	hr = ::CreateShaderResourceView(_device.Get(), img.GetImages(), img.GetImageCount(), md, _shaderResourceView2.GetAddressOf());
+	CHECK(hr);
+}
+
+void Game::CreateConstantBuffer()
+{
+	D3D11_BUFFER_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+	
+	// GPU Read || CPU Write
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	desc.ByteWidth = sizeof(TransformData);
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // CPU 접근 가능
+
+
+	HRESULT hr = _device->CreateBuffer(&desc, nullptr, _constantBuffer.GetAddressOf());
 	CHECK(hr);
 }
 
