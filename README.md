@@ -1,6 +1,6 @@
 ### 🌱 DirectX 기초학습
 ----
-강의: [DirectX11 입문](https://www.inflearn.com/course/lecture?courseSlug=directx11-%EA%B2%8C%EC%9E%84%EA%B0%9C%EB%B0%9C-%EB%8F%84%EC%95%BD%EB%B0%98&unitId=148641&tab=curriculum)
+참고 강의: [DirectX11 입문](https://www.inflearn.com/course/lecture?courseSlug=directx11-%EA%B2%8C%EC%9E%84%EA%B0%9C%EB%B0%9C-%EB%8F%84%EC%95%BD%EB%B0%98&unitId=148641&tab=curriculum)
 
 ---
 ### ✌️ 여기까지 진행했어요
