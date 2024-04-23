@@ -14,21 +14,34 @@ void Game::Init(HWND hwnd)
 	_hwnd = hwnd;
 
 	_graphics = make_shared<Graphics>(hwnd);
+
+	_geometryTexture = make_shared<Geometry<VertexTextureData>>();
+	_geometryColor = make_shared<Geometry<VertexColorData>>();
+	
 	_vertexBuffer = make_shared<VertexBuffer>(_graphics->GetDevice());
 	_indexBuffer = make_shared<IndexBuffer>(_graphics->GetDevice());
+	_inputLayout = make_shared<InputLayout>(_graphics->GetDevice());
+	
+	_vertexShader = make_shared<VertexShader>(_graphics->GetDevice());
+	_pixelShader = make_shared<PixelShader>(_graphics->GetDevice());
+	_constantBuffer = make_shared<ConstantBuffer<TransformData>>(_graphics->GetDevice(), _graphics->GetDeviceContext());
+	_texture = make_shared<Texture>(_graphics->GetDevice());
+
+	_vertexShader->Create(L"Default.hlsl", "VS", "vs_5_0");
+	_pixelShader->Create(L"Default.hlsl", "PS", "ps_5_0");
+
+	
+	_inputLayout->Create(VertexTextureData::descs, _vertexShader->GetBlob());
+
 
 	CreateGeometry();
-	CreateVS();
-	CreateInputLayout();
-	CreatePS();
-
 	CreateRasterizerState();
 	CreateSamplerState();
 	CreateBlendState();
 
-	CreateSRV();
+	_texture->Create(L"TeacherAhn.jpg");
 
-	CreateConstantBuffer();
+	_constantBuffer->Create();
 }
 
 void Game::Update()
@@ -48,19 +61,7 @@ void Game::Update()
 	_transformData.matWorld = matWorld;
 
 	// CPU(_transformData) -> GPU로 데이터 복사
-	D3D11_MAPPED_SUBRESOURCE subResource;
-	ZeroMemory(&subResource, sizeof(subResource));
-
-	// CPU <-> GPU 간 데이터 이동 (핵심!!)
-	// 1. constantBuffer 생성
-	// 2. constantBuffer + subResource 결합
-	// 3. transformData를 subResource로 복사
-	// 4. constantBuffer + subResource 결합 해제
-	// 5. constantBuffer와 VS 연결
-
-	_graphics->GetDeviceContext()->Map(_constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
-	::memcpy(subResource.pData, &_transformData, sizeof(_transformData));
-	_graphics->GetDeviceContext()->Unmap(_constantBuffer.Get(), 0);
+	_constantBuffer->CopyData(_transformData);
 }
 
 void Game::Render()
@@ -68,18 +69,18 @@ void Game::Render()
 	_graphics->RenderBegin();
 
 	{
-		uint32 stride = sizeof(Vertex);
+		uint32 stride = sizeof(VertexTextureData);
 		uint32 offset = 0;
 
 		// IA
 		_graphics->GetDeviceContext()->IASetVertexBuffers(0, 1, _vertexBuffer->GetComPtr().GetAddressOf(), &stride, &offset);
 		_graphics->GetDeviceContext()->IASetIndexBuffer(_indexBuffer->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
-		_graphics->GetDeviceContext()->IASetInputLayout(_inputLayout.Get());
+		_graphics->GetDeviceContext()->IASetInputLayout(_inputLayout->GetComPtr().Get());
 		_graphics->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		// VS
-		_graphics->GetDeviceContext()->VSSetShader(_vertexShader.Get(), nullptr, 0);
-		_graphics->GetDeviceContext()->VSSetConstantBuffers(0,1,_constantBuffer.GetAddressOf());
+		_graphics->GetDeviceContext()->VSSetShader(_vertexShader->GetComPtr().Get(), nullptr, 0);
+		_graphics->GetDeviceContext()->VSSetConstantBuffers(0,1,_constantBuffer->GetComPtr().GetAddressOf());
 
 
 		// RS
@@ -87,43 +88,17 @@ void Game::Render()
 
 		// PS
 		// Shader 리소스를 PS에 전달
-		_graphics->GetDeviceContext()->PSSetShader(_pixelShader.Get(), nullptr, 0);
-		_graphics->GetDeviceContext()->PSSetShaderResources(0, 1, _shaderResourceView.GetAddressOf());
+		_graphics->GetDeviceContext()->PSSetShader(_pixelShader->GetComPtr().Get(), nullptr, 0);
+		_graphics->GetDeviceContext()->PSSetShaderResources(0, 1, _texture->GetComPtr().GetAddressOf());
 		_graphics->GetDeviceContext()->PSSetSamplers(0, 1, _samplerState.GetAddressOf());
 
 		// OM
 		// 인덱스 버퍼를 지원하는 Draw를 시행합니다.
 		_graphics->GetDeviceContext()->OMSetBlendState(_blendState.Get(), nullptr, 0xFFFFFFFF);
-		_graphics->GetDeviceContext()->DrawIndexed(_indices.size(), 0, 0);
+		_graphics->GetDeviceContext()->DrawIndexed(_geometryTexture->GetIndexCount(), 0, 0);
 	}
 
 	_graphics->RenderEnd();
-}
-
-void Game::CreateInputLayout()
-{
-	D3D11_INPUT_ELEMENT_DESC layout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		// SemanticName을 기존 COLOR에서 TEXCOORD로 수정합니다
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
-	_graphics->GetDevice()->CreateInputLayout(layout, ARRAYSIZE(layout), _vsBlob->GetBufferPointer(), _vsBlob->GetBufferSize(), _inputLayout.GetAddressOf());
-}
-
-void Game::CreateVS()
-{
-	LoadShaderFromFile(L"Default.hlsl", "VS", "vs_5_0", _vsBlob);
-	HRESULT hr = _graphics->GetDevice()->CreateVertexShader(_vsBlob->GetBufferPointer(), _vsBlob->GetBufferSize(), nullptr, _vertexShader.GetAddressOf());
-	CHECK(hr);
-}
-
-void Game::CreatePS()
-{
-	LoadShaderFromFile(L"Default.hlsl", "PS", "ps_5_0", _psBlob);
-	HRESULT hr = _graphics->GetDevice()->CreatePixelShader(_psBlob->GetBufferPointer(), _psBlob->GetBufferSize(), nullptr, _pixelShader.GetAddressOf());
-	CHECK(hr);
 }
 
 
@@ -191,55 +166,5 @@ void Game::CreateBlendState()
 	_graphics->GetDevice()->CreateBlendState(&desc, _blendState.GetAddressOf());
 }
 
-void Game::CreateSRV()
-{
-	DirectX::TexMetadata md;
-	DirectX::ScratchImage img;
-	HRESULT hr = ::LoadFromWICFile(L"TeacherAhn.jpg", WIC_FLAGS_NONE, &md, img);
-	CHECK(hr);
-
-	hr = ::CreateShaderResourceView(_graphics->GetDevice().Get(), img.GetImages(), img.GetImageCount(), md, _shaderResourceView.GetAddressOf());
-	CHECK(hr);
-
-	hr = ::LoadFromWICFile(L"Rathalos.png", WIC_FLAGS_NONE, &md, img);
-	CHECK(hr);
-
-	hr = ::CreateShaderResourceView(_graphics->GetDevice().Get(), img.GetImages(), img.GetImageCount(), md, _shaderResourceView2.GetAddressOf());
-	CHECK(hr);
-}
-
-void Game::CreateConstantBuffer()
-{
-	D3D11_BUFFER_DESC desc;
-	ZeroMemory(&desc, sizeof(desc));
-	
-	// GPU Read || CPU Write
-	desc.Usage = D3D11_USAGE_DYNAMIC;
-	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	desc.ByteWidth = sizeof(TransformData);
-	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // CPU 접근 가능
 
 
-	HRESULT hr = _graphics->GetDevice()->CreateBuffer(&desc, nullptr, _constantBuffer.GetAddressOf());
-	CHECK(hr);
-}
-
-
-void Game::LoadShaderFromFile(const wstring& path, const string& name, const string& version, ComPtr<ID3DBlob>& blob)
-{
-	const uint32 compileFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-
-	HRESULT hr = ::D3DCompileFromFile(
-		path.c_str(),
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		name.c_str(),
-		version.c_str(),
-		compileFlag,
-		0,
-		blob.GetAddressOf(),
-		nullptr
-	);
-
-	CHECK(hr);
-}

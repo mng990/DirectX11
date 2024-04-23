@@ -20,8 +20,6 @@ using namespace std;
 #include <windows.h>
 #include <assert.h>
 
-
-
 // DX
 // 프로젝트 속성 -> C/C++ -> 추가 디렉토리에서 탐색
 #include <d3d11.h>
@@ -50,3 +48,10 @@ using namespace Microsoft::WRL;
 #include "Graphics.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "InputLayout.h"
+#include "VertexData.h"
+#include "Geometry.h"
+#include "GeometryHelper.h"
+#include "Shader.h"
+#include "ConstantBuffer.h"
+#include "Texture.h"
