@@ -15,15 +15,24 @@ struct VS_OUTPUT
 
 cbuffer TransformData : register(b0)
 {
-    float4 offset;
+    // 행우선
+    row_major matrix matWorld;
+    row_major matrix matView;
+    row_major matrix matProjection;
+    
 }
 
 // IA - VS - RS - PS - OM
 VS_OUTPUT VS(VS_INPUT input)
 {
     VS_OUTPUT output;
-    // 물체의 위치 정보 + 이동 정보
-    output.position = input.position + offset; 
+    
+    // WVP
+    float4 position = mul(input.position, matWorld); // World Space
+    position = mul(position, matView); // View Space
+    position = mul(position, matProjection); // Projection Space
+    
+    output.position = position;
     output.uv = input.uv;
 
     return output;

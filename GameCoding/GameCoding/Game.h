@@ -91,9 +91,8 @@ private:
 
 	// SamplerState
 	ComPtr<ID3D11SamplerState> _samplerState = nullptr;
-
 	// BlenderState
-	ComPtr<ID3D11BlendState> _blenderState = nullptr;
+	ComPtr<ID3D11BlendState> _blendState = nullptr;
 
 	//SRV (Shader Resource View)
 	ComPtr<ID3D11ShaderResourceView> _shaderResourceView = nullptr;
@@ -104,7 +103,9 @@ private:
 	// SRT (Scale Rotation Translation)
 	TransformData _transformData;
 	ComPtr<ID3D11Buffer> _constantBuffer = nullptr;
-	// [CPU <-> RAM] [GPU <-> VRAM]
 
+	Vec3 _localPosition = { 0.f, 0.f, 0.f };
+	Vec3 _localRotation = { 0.f, 0.f, 0.f };
+	Vec3 _localScale = { 1.f, 1.f, 1.f };
 };
 

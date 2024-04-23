@@ -24,7 +24,6 @@ void Game::Init(HWND hwnd)
 	CreateInputLayout();
 	CreatePS();
 
-
 	CreateRasterizerState();
 	CreateSamplerState();
 	CreateBlendState();
@@ -37,19 +36,30 @@ void Game::Init(HWND hwnd)
 void Game::Update()
 {
 	// SRT(Scale Rotation Translation)
-	_transformData.offset.x += 0.003f;
-	_transformData.offset.y += 0.003f;
+
+	_localPosition.x += 0.001f;
+	_localPosition.y += 0.001f;
+
+	Matrix matScale = Matrix::CreateScale(_localScale);
+	Matrix matRotation = Matrix::CreateRotationX(_localRotation.x);
+	matRotation *= Matrix::CreateRotationY(_localRotation.y);
+	matRotation *= Matrix::CreateRotationZ(_localRotation.z);
+	Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
+
+	Matrix matWorld = matScale * matRotation * matTranslation; // SRT
+	_transformData.matWorld = matWorld;
 
 	// CPU(_transformData) -> GPU로 데이터 복사
 	D3D11_MAPPED_SUBRESOURCE subResource;
 	ZeroMemory(&subResource, sizeof(subResource));
 
 	// CPU <-> GPU 간 데이터 이동 (핵심!!)
-	// constantBuffer 생성
-	// constantBuffer + subResource 결합
-	// transformData를 subResource로 복사
-	// constantBuffer + subResource 결합 해제
-	// constantBuffer와 VS 연결
+	// 1. constantBuffer 생성
+	// 2. constantBuffer + subResource 결합
+	// 3. transformData를 subResource로 복사
+	// 4. constantBuffer + subResource 결합 해제
+	// 5. constantBuffer와 VS 연결
+
 	_deviceContext->Map(_constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
 	::memcpy(subResource.pData, &_transformData, sizeof(_transformData));
 	_deviceContext->Unmap(_constantBuffer.Get(), 0);
@@ -77,16 +87,15 @@ void Game::Render()
 		// RS
 		_deviceContext->RSSetState(_rasterizerState.Get());
 
-
 		// PS
 		// Shader 리소스를 PS에 전달
 		_deviceContext->PSSetShader(_pixelShader.Get(), nullptr, 0);
 		_deviceContext->PSSetShaderResources(0, 1, _shaderResourceView.GetAddressOf());
-		//_deviceContext->PSSetShaderResources(1, 1, _shaderResourceView2.GetAddressOf());
 		_deviceContext->PSSetSamplers(0, 1, _samplerState.GetAddressOf());
 
 		// OM
 		// 인덱스 버퍼를 지원하는 Draw를 시행합니다.
+		_deviceContext->OMSetBlendState(_blendState.Get(), nullptr, 0xFFFFFFFF);
 		_deviceContext->DrawIndexed(_indices.size(), 0, 0);
 	}
 
@@ -175,16 +184,15 @@ void Game::CreateGeometry()
 
 		_vertices[0].position = Vec3(-0.5f, -0.5f, 0.f);
 		_vertices[0].uv = Vec2(0.f, 1.f);
-		//_vertices[0].color = Color(1.f, 0.f, 0.f, 1.f);
+
 		_vertices[1].position = Vec3(-0.5f, 0.5f, 0.f);
 		_vertices[1].uv = Vec2(0.f, 0.f);
-		//_vertices[1].color = Color(1.f, 0.f, 0.f, 1.f);
+
 		_vertices[2].position = Vec3(0.5f, -0.5f, 0.f);
 		_vertices[2].uv = Vec2(1.f, 1.f);
-		//_vertices[2].color = Color(1.f, 0.f, 0.f, 1.f);
+
 		_vertices[3].position = Vec3(0.5f, 0.5f, 0.f);
 		_vertices[3].uv = Vec2(1.f, 0.f);
-		//_vertices[3].color = Color(1.f, 0.f, 0.f, 1.f);
 	}
 
 	// VertexBuffer
@@ -291,13 +299,31 @@ void Game::CreateSamplerState()
 	desc.MinLOD = FLT_MIN;
 	desc.MipLODBias = 0.f;
 
-
 	HRESULT hr = _device->CreateSamplerState(&desc, _samplerState.GetAddressOf());
 	CHECK(hr);
 }
 
 void Game::CreateBlendState()
 {
+	//desc 생성
+	D3D11_BLEND_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+
+	//desc 옵션 설정
+	desc.AlphaToCoverageEnable = false;
+	desc.IndependentBlendEnable = false;
+
+	// 블렌딩 옵션
+	desc.RenderTarget[0].BlendEnable = true;
+	desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	_device->CreateBlendState(&desc, _blendState.GetAddressOf());
 }
 
 void Game::CreateSRV()

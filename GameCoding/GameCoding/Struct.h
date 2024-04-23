@@ -9,6 +9,7 @@ struct Vertex
 
 struct TransformData
 {
-	Vec3 offset; // 월드 기준의 위치값
-	float dummy;
+	Matrix matWorld = Matrix::Identity;
+	Matrix matView = Matrix::Identity;
+	Matrix matProjection = Matrix::Identity;
 }; 

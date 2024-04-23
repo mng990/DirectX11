@@ -1,5 +1,8 @@
 #pragma once
+
+#include <windows.h>
 #include "DirectXMath.h"
+#include "SimpleMath.h"
 
 
 using int8 = __int8;
@@ -12,7 +15,13 @@ using uint16 = unsigned __int16;
 using uint32 = unsigned __int32;
 using uint64 = unsigned __int64;
 
-using Vec2 = DirectX::XMFLOAT2; // 2차원 실수 벡터
-using Vec3 = DirectX::XMFLOAT3; // 3차원 실수 벡터
-using Vec4 = DirectX::XMFLOAT4; // 3차원+weight 실수 벡터
+// using Vec2 = DirectX::XMFLOAT2; // 2차원 실수 벡터
+// using Vec3 = DirectX::XMFLOAT3; // 3차원 실수 벡터
+// using Vec4 = DirectX::XMFLOAT4; // 3차원+weight 실수 벡터
 using Color = DirectX::XMFLOAT4;
+
+
+using Vec2 = DirectX::SimpleMath::Vector2;
+using Vec3 = DirectX::SimpleMath::Vector3;
+using Vec4 = DirectX::SimpleMath::Vector4;
+using Matrix = DirectX::SimpleMath::Matrix;
