@@ -1,6 +1,5 @@
 #pragma once
 #include "pch.h"
-#include "Graphics.h"
 
 Graphics::Graphics(HWND hwnd)
 {
