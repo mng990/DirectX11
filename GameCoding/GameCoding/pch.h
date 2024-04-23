@@ -9,11 +9,18 @@
 #include <list>
 #include <map>
 #include <unordered_map>
+
+// C++
+#include <string>
+#include <memory>
+
 using namespace std;
 
 // WIN
 #include <windows.h>
 #include <assert.h>
+
+
 
 // DX
 // 프로젝트 속성 -> C/C++ -> 추가 디렉토리에서 탐색
@@ -38,3 +45,5 @@ using namespace Microsoft::WRL;
 
 
 #define CHECK(p) assert(SUCCEEDED(p))
+
+#include "Graphics.h"

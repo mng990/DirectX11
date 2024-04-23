@@ -21,6 +21,30 @@
     <Filter Include="소스 파일\98.Shaders">
       <UniqueIdentifier>{43c6853c-e82e-4d5e-9fd2-a88a75530ac0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\00. Engine">
+      <UniqueIdentifier>{2589c27e-d9b0-4923-affa-8c0a21106f33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Engine\Pipeline">
+      <UniqueIdentifier>{e3ec3fab-34b5-4eec-ae54-39cd72b00962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Engine\Pipeline\00. Geometry">
+      <UniqueIdentifier>{6f5d6a18-a2f5-4944-af7c-a399225f6dde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Engine\Pipeline\01. InputAssembler">
+      <UniqueIdentifier>{9e05fc2c-296e-4109-a88e-8e0bbd68dd2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Engine\Pipeline\02. VertexShader">
+      <UniqueIdentifier>{71fcad94-9034-4193-b52b-ec96268581df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Engine\Pipeline\03. Rasterizer">
+      <UniqueIdentifier>{a6f66601-5602-4bfa-af46-1696731c9ec0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Engine\Pipeline\04. PixelShader">
+      <UniqueIdentifier>{af445dd8-ef16-49d3-bba7-e9005be20fe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Engine\Pipeline\05. OutputMerger">
+      <UniqueIdentifier>{0d456bae-3e87-4864-9bb0-fa557ab101d9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="소스 파일\99. Headers\Utils">
       <UniqueIdentifier>{045b862f-4068-4de0-b1db-be60008a35be}</UniqueIdentifier>
     </Filter>
@@ -28,9 +52,6 @@
   <ItemGroup>
     <ClInclude Include="GameCoding.h">
       <Filter>소스 파일\01. Main</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>소스 파일\99. Headers</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
       <Filter>소스 파일\99. Headers\Andromeda</Filter>
@@ -53,6 +74,12 @@
     <ClInclude Include="SimpleMath.h">
       <Filter>소스 파일\99. Headers\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>소스 파일\00. Engine\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>소스 파일\99. Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameCoding.rc">
@@ -74,14 +101,17 @@
     <ClCompile Include="Values.h">
       <Filter>소스 파일\99. Headers</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>소스 파일\99. Headers</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>소스 파일\01. Main</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>소스 파일\00. Engine\Pipeline</Filter>
+    </ClCompile>
     <ClCompile Include="SimpleMath.cpp">
       <Filter>소스 파일\99. Headers\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>소스 파일\99. Headers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
