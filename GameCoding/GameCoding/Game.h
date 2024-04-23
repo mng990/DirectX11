@@ -13,7 +13,41 @@ public:
 	void Render();
 
 private:
-	void CreateGeometry();
+	void CreateGeometry()
+	{
+		// VertexData
+		{
+			_vertices.resize(4);
+
+			_vertices[0].position = Vec3(-0.5f, -0.5f, 0.f);
+			_vertices[0].uv = Vec2(0.f, 1.f);
+
+			_vertices[1].position = Vec3(-0.5f, 0.5f, 0.f);
+			_vertices[1].uv = Vec2(0.f, 0.f);
+
+			_vertices[2].position = Vec3(0.5f, -0.5f, 0.f);
+			_vertices[2].uv = Vec2(1.f, 1.f);
+
+			_vertices[3].position = Vec3(0.5f, 0.5f, 0.f);
+			_vertices[3].uv = Vec2(1.f, 0.f);
+		}
+
+		// VertexBuffer
+		{
+			_vertexBuffer->Create(_vertices);
+		}
+
+		// Index
+		{
+			_indices = { 0, 1, 2, 2, 1, 3 };
+		}
+
+		// IndexBuffer
+		{
+			_indexBuffer->Create(_indices);
+		}
+
+	}
 	void CreateInputLayout();
 	
 	void CreateVS();
@@ -35,10 +69,14 @@ private:
 private:
 	// Geometry(Mesh)
 	vector<Vertex> _vertices;
-	ComPtr<ID3D11Buffer> _vertexBuffer = nullptr;
+	shared_ptr<VertexBuffer> _vertexBuffer;
+
+	//ComPtr<ID3D11Buffer> _vertexBuffer = nullptr;
 	ComPtr<ID3D11InputLayout> _inputLayout = nullptr;
-	vector<int32> _indices;
-	ComPtr<ID3D11Buffer> _indexBuffer = nullptr;
+	vector<uint32> _indices;
+	
+	shared_ptr<IndexBuffer> _indexBuffer;
+	//ComPtr<ID3D11Buffer> _indexBuffer = nullptr;
 
 	// VS
 	ComPtr<ID3D11VertexShader> _vertexShader = nullptr;
