@@ -13,20 +13,9 @@ public:
 	void Render();
 
 private:
-	void CreateGeometry()
-	{
-		GeometryHelper::CreateRectangle(_geometryTexture); // VertexData && Indices
-		_vertexBuffer->Create(_geometryTexture->GetVertices());		
-		_indexBuffer->Create(_geometryTexture->GetIndices());
-	}
-
-	void CreateRasterizerState();
-	void CreateSamplerState();
-	void CreateBlendState();
-
-private:
 	HWND _hwnd;
 	shared_ptr<Graphics> _graphics;
+	shared_ptr<Pipeline> _pipeline;
 
 private:
 	// Geometry(Mesh)
@@ -39,19 +28,13 @@ private:
 	shared_ptr<InputLayout> _inputLayout;
 
 	shared_ptr<VertexShader> _vertexShader;
-	ComPtr<ID3D11RasterizerState> _rasterizerState = nullptr;
+	shared_ptr<RasterizerState> _rasterizerState;
 	shared_ptr<PixelShader> _pixelShader;
 
 	//SRV (Shader Resource View)
 	shared_ptr<Texture> _texture;
-
-	// SamplerState
-	ComPtr<ID3D11SamplerState> _samplerState = nullptr;
-	// BlenderState
-	ComPtr<ID3D11BlendState> _blendState = nullptr;
-
-	
-
+	shared_ptr<SamplerState> _samplerState;
+	shared_ptr<BlendState> _blendState;
 
 private:
 	// SRT (Scale Rotation Translation)

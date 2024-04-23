@@ -33,9 +33,6 @@
     <Filter Include="소스 파일\00. Engine\Pipeline\02. VertexShader">
       <UniqueIdentifier>{71fcad94-9034-4193-b52b-ec96268581df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\00. Engine\Pipeline\03. Rasterizer">
-      <UniqueIdentifier>{a6f66601-5602-4bfa-af46-1696731c9ec0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\00. Engine\Pipeline\04. PixelShader">
       <UniqueIdentifier>{af445dd8-ef16-49d3-bba7-e9005be20fe7}</UniqueIdentifier>
     </Filter>
@@ -47,6 +44,9 @@
     </Filter>
     <Filter Include="소스 파일\98.Shaders">
       <UniqueIdentifier>{43c6853c-e82e-4d5e-9fd2-a88a75530ac0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Engine\Pipeline\03. Rasterizer">
+      <UniqueIdentifier>{a6f66601-5602-4bfa-af46-1696731c9ec0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +107,18 @@
     <ClInclude Include="Texture.h">
       <Filter>소스 파일\00. Engine\Pipeline\04. PixelShader</Filter>
     </ClInclude>
+    <ClInclude Include="BlendState.h">
+      <Filter>소스 파일\00. Engine\Pipeline\05. OutputMerger</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerState.h">
+      <Filter>소스 파일\00. Engine\Pipeline\04. PixelShader</Filter>
+    </ClInclude>
+    <ClInclude Include="RasterizerState.h">
+      <Filter>소스 파일\00. Engine\Pipeline\03. Rasterizer</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipeline.h">
+      <Filter>소스 파일\00. Engine\Pipeline</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameCoding.rc">
@@ -166,6 +178,18 @@
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>소스 파일\00. Engine\Pipeline\04. PixelShader</Filter>
+    </ClCompile>
+    <ClCompile Include="BlendState.cpp">
+      <Filter>소스 파일\00. Engine\Pipeline\05. OutputMerger</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerState.cpp">
+      <Filter>소스 파일\00. Engine\Pipeline\04. PixelShader</Filter>
+    </ClCompile>
+    <ClCompile Include="RasterizerState.cpp">
+      <Filter>소스 파일\00. Engine\Pipeline\03. Rasterizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipeline.cpp">
+      <Filter>소스 파일\00. Engine\Pipeline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
