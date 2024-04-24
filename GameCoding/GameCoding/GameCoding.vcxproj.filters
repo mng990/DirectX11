@@ -51,6 +51,9 @@
     <Filter Include="소스 파일\00. Engine\GameObject">
       <UniqueIdentifier>{aa71bc06-9304-472d-bbaa-aa7906ac9502}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\00. Engine\Component">
+      <UniqueIdentifier>{7abda68a-0663-445f-8c54-799e0176a2c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameCoding.h">
