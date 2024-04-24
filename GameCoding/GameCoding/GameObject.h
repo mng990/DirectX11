@@ -1,29 +1,16 @@
 #pragma once
-
-#include "Graphics.h"
-#include "GameObject.h"
-
-class Game
+class GameObject
 {
 public:
-	Game();
-	~Game();
+	GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext);
+	~GameObject();
 
-public:
-	void Init(HWND hwnd);
 	void Update();
-	void Render();
-
+	void Render(shared_ptr<Pipeline> pipeline);
 private:
-	HWND _hwnd;
-	
-	shared_ptr<Graphics> _graphics;
-	shared_ptr<Pipeline> _pipeline;
+	ComPtr<ID3D11Device> _device;
 
-	shared_ptr<GameObject> _gameObject;
-private:
 	// Geometry(Mesh)
-
 	// ¸®¼Ò½º
 	shared_ptr<Geometry<VertexTextureData>> _geometryTexture;
 	shared_ptr<Geometry<VertexColorData>> _geometryColor;
@@ -32,13 +19,11 @@ private:
 	shared_ptr<InputLayout> _inputLayout;
 
 	shared_ptr<VertexShader> _vertexShader;
-	shared_ptr<RasterizerState> _rasterizerState;
 	shared_ptr<PixelShader> _pixelShader;
-
-	//SRV (Shader Resource View)
 	shared_ptr<Texture> _texture;
 	shared_ptr<SamplerState> _samplerState;
 	shared_ptr<BlendState> _blendState;
+	shared_ptr<RasterizerState> _rasterizerState;
 
 private:
 	// SRT (Scale Rotation Translation)

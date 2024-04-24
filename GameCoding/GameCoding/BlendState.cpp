@@ -2,6 +2,7 @@
 #include "BlendState.h"
 
 BlendState::BlendState(ComPtr<ID3D11Device> device)
+	:_device(device)
 {
 }
 
