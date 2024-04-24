@@ -6,20 +6,23 @@ GameObject::GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> 
 	_geometryTexture = make_shared<Geometry<VertexTextureData>>();
 	GeometryHelper::CreateRectangle(_geometryTexture);
 
+	_geometryColor = make_shared<Geometry<VertexColorData>>();
+	GeometryHelper::CreateRectangle(_geometryColor, Color{0.f, 0.f, 1.0f, 1.0f});
+
 	_vertexBuffer = make_shared<VertexBuffer>(device);
-	_vertexBuffer->Create(_geometryTexture->GetVertices());
+	_vertexBuffer->Create(_geometryColor->GetVertices());
 
 	_indexBuffer = make_shared<IndexBuffer>(device);
-	_indexBuffer->Create(_geometryTexture->GetIndices());
+	_indexBuffer->Create(_geometryColor->GetIndices());
 
 	_vertexShader = make_shared<VertexShader>(device);
-	_vertexShader->Create(L"Default.hlsl", "VS", "vs_5_0");
+	_vertexShader->Create(L"Color.hlsl", "VS", "vs_5_0");
 
 	_inputLayout = make_shared<InputLayout>(device);
-	_inputLayout->Create(VertexTextureData::descs, _vertexShader->GetBlob());
+	_inputLayout->Create(VertexColorData::descs, _vertexShader->GetBlob());
 
 	_pixelShader = make_shared<PixelShader>(device);
-	_pixelShader->Create(L"Default.hlsl", "PS", "ps_5_0");
+	_pixelShader->Create(L"Color.hlsl", "PS", "ps_5_0");
 
 	_constantBuffer = make_shared<ConstantBuffer<TransformData>>(device, deviceContext);
 	_constantBuffer->Create();
@@ -73,8 +76,8 @@ void GameObject::Render(shared_ptr<Pipeline> pipeline)
 	pipeline->SetVertexBuffer(_vertexBuffer);
 	pipeline->SetIndexBuffer(_indexBuffer);
 	pipeline->SetConstantBuffer(0, SS_VertexShader, _constantBuffer);
-	pipeline->SetTexture(0, SS_PixelShader, _texture);
-	pipeline->SetSamplerState(0, SS_PixelShader, _samplerState);
+	//pipeline->SetTexture(0, SS_PixelShader, _texture);
+	//pipeline->SetSamplerState(0, SS_PixelShader, _samplerState);
 
-	pipeline->DrawIndexed(_geometryTexture->GetIndexCount(), 0, 0);
+	pipeline->DrawIndexed(_geometryColor->GetIndexCount(), 0, 0);
 }
