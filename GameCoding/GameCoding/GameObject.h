@@ -1,37 +1,39 @@
 #pragma once
-class GameObject
+#include "Component.h"
+
+class Camera;
+class Transform;
+class MonoBehavior;
+class MeshRenderer;
+class Animator;
+
+class GameObject : public enable_shared_from_this<GameObject>
 {
 public:
 	GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext);
 	~GameObject();
 
+	void Awake();
+	void Start();
 	void Update();
-	void Render(shared_ptr<Pipeline> pipeline);
+	void LateUpdate();
+	void FixedUpdate();
+
+	shared_ptr<Component> GetFixedComponent(ComponentType type);
+	shared_ptr<Transform> GetTransform();
+	shared_ptr<Camera> GetCamera();
+	shared_ptr<MeshRenderer> GetMeshRenderer();
+	shared_ptr<Animator> GetAnimator();
+
+	shared_ptr<Transform> GetOrAddTransform();
+
+	void AddComponent(shared_ptr<Component> component);
+
 private:
 	ComPtr<ID3D11Device> _device;
 
-	// Geometry(Mesh)
-	// ¸®¼Ò½º
-	shared_ptr<Geometry<VertexTextureData>> _geometryTexture;
-	shared_ptr<Geometry<VertexColorData>> _geometryColor;
-	shared_ptr<VertexBuffer> _vertexBuffer;
-	shared_ptr<IndexBuffer> _indexBuffer;
-	shared_ptr<InputLayout> _inputLayout;
-
-	shared_ptr<VertexShader> _vertexShader;
-	shared_ptr<PixelShader> _pixelShader;
-	shared_ptr<Texture> _texture;
-	shared_ptr<SamplerState> _samplerState;
-	shared_ptr<BlendState> _blendState;
-	shared_ptr<RasterizerState> _rasterizerState;
-
-private:
-	// SRT (Scale Rotation Translation)
-	TransformData _transformData;
-	shared_ptr<ConstantBuffer<TransformData>> _constantBuffer;
-
-	Vec3 _localPosition = { 0.f, 0.f, 0.f };
-	Vec3 _localRotation = { 0.f, 0.f, 0.f };
-	Vec3 _localScale = { 1.f, 1.f, 1.f };
+protected:
+	array<shared_ptr<Component>, FIXED_COMPONENT_COUNT> _components;
+	vector<shared_ptr<Component>> _scripts;
 };
 

@@ -4,8 +4,8 @@ template<typename T>
 class Geometry
 {
 public:
-	Geometry() {}
-	~Geometry() {}
+	Geometry() {};
+	~Geometry() {};
 
 	uint32 GetVertexCount() { return static_cast<uint32>(_vertices.size()); }
 	void* GetVertexData() { return _vertices.data(); }

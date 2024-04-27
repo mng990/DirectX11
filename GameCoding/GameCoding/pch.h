@@ -12,6 +12,7 @@
 
 // C++
 #include <string>
+#include <array>
 #include <memory>
 
 using namespace std;
@@ -19,6 +20,10 @@ using namespace std;
 // WIN
 #include <windows.h>
 #include <assert.h>
+
+// Utils
+#include "tinyxml2.h"
+using namespace tinyxml2;
 
 // DX
 // 프로젝트 속성 -> C/C++ -> 추가 디렉토리에서 탐색
@@ -44,6 +49,16 @@ using namespace Microsoft::WRL;
 
 #define CHECK(p) assert(SUCCEEDED(p))
 
+
+#include "Game.h"
+
+#define GAME		GGame
+#define INPUT		GAME->GetInputManager()
+#define TIME		GAME->GetTimeManager()
+#define	SCENE		GAME->GetSceneManager()
+#define RESOURCES	GAME->GetResourceManager()
+#define RENDER		GAME->GetRenderManager()
+
 // Engine
 #include "Graphics.h"
 #include "VertexBuffer.h"
@@ -52,10 +67,13 @@ using namespace Microsoft::WRL;
 #include "VertexData.h"
 #include "Geometry.h"
 #include "GeometryHelper.h"
-#include "Shader.h"
+#include "ShaderBase.h"
 #include "ConstantBuffer.h"
 #include "Texture.h"
 #include "BlendState.h"
 #include "RasterizerState.h"
 #include "SamplerState.h"
 #include "Pipeline.h"
+#include "GameObject.h"
+#include "Transform.h"
+#include "Component.h"

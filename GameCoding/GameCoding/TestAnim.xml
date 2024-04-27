@@ -1,0 +1,6 @@
+<Animation Name="SnakeAnim" Loop="true" TexturePath="TODO">
+    <Keyframe offsetX="0" offsetY="0" SizeX="100" SizeY="100" time="0.1"/>
+    <Keyframe offsetX="100" offsetY="0" SizeX="100" SizeY="100" time="0.1"/>
+    <Keyframe offsetX="200" offsetY="0" SizeX="100" SizeY="100" time="0.1"/>
+    <Keyframe offsetX="300" offsetY="0" SizeX="100" SizeY="100" time="0.1"/>
+</Animation>

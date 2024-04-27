@@ -1,4 +1,6 @@
-﻿#include "pch.h"
+﻿#pragma once
+
+#include "pch.h"
 #include "framework.h"
 #include "GameCoding.h"
 #include "Game.h"
@@ -26,8 +28,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (!InitInstance(hInstance, nCmdShow))
         return FALSE;
 
-    Game game;
-    game.Init(hWnd);
+    GAME->Init(hWnd);
 
     MSG msg = {};
 
@@ -41,8 +42,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
-            game.Update();
-            game.Render();
+            GAME->Update();
+            GAME->Render();
         }
     }
 

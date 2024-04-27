@@ -2,24 +2,32 @@
 struct VS_INPUT
 {
     float4 position : POSITION;
-	//float4 color : COLOR;
     float2 uv : TEXCOORD;
 };
 
 struct VS_OUTPUT
 {
     float4 position : SV_POSITION;
-	//float4 color : COLOR;
     float2 uv : TEXCOORD;
 };
 
-cbuffer TransformData : register(b0)
+cbuffer CameraData : register(b0)
 {
-    // Çà¿ì¼±
-    row_major matrix matWorld;
     row_major matrix matView;
     row_major matrix matProjection;
-    
+}
+
+cbuffer TransformData : register(b1)
+{
+    row_major matrix matWorld;
+}
+
+cbuffer AnimationData : register(b2)
+{
+    float2 spriteOffset;
+    float2 spriteSize;
+    float2 textureSize;
+    float useAnimation;
 }
 
 // IA - VS - RS - PS - OM
@@ -34,6 +42,12 @@ VS_OUTPUT VS(VS_INPUT input)
     
     output.position = position;
     output.uv = input.uv;
+    
+    if(useAnimation == 1.0f)
+    {
+        output.uv *= spriteSize / textureSize;
+        output.uv += spriteOffset / textureSize;
+    }
 
     return output;
 }

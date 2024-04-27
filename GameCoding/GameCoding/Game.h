@@ -3,6 +3,13 @@
 #include "Graphics.h"
 #include "GameObject.h"
 
+class InputManager;
+class TimeManager;
+class Pipeline;
+class SceneManager;
+class ResourceManager;
+class RenderManager;
+
 class Game
 {
 public:
@@ -14,39 +21,24 @@ public:
 	void Update();
 	void Render();
 
+
+	shared_ptr<InputManager> GetInputManager()	{ return _input; }
+	shared_ptr<TimeManager> GetTimeManager()	{ return _time; }
+	shared_ptr<SceneManager> GetSceneManager()	{ return _scene; }
+	shared_ptr<ResourceManager> GetResourceManager() { return _resource; }
+	shared_ptr<RenderManager> GetRenderManager() { return _render; }
+
 private:
 	HWND _hwnd;
-	
 	shared_ptr<Graphics> _graphics;
-	shared_ptr<Pipeline> _pipeline;
-
-	shared_ptr<GameObject> _gameObject;
-private:
-	// Geometry(Mesh)
-
-	// ¸®¼Ò½º
-	shared_ptr<Geometry<VertexTextureData>> _geometryTexture;
-	shared_ptr<Geometry<VertexColorData>> _geometryColor;
-	shared_ptr<VertexBuffer> _vertexBuffer;
-	shared_ptr<IndexBuffer> _indexBuffer;
-	shared_ptr<InputLayout> _inputLayout;
-
-	shared_ptr<VertexShader> _vertexShader;
-	shared_ptr<RasterizerState> _rasterizerState;
-	shared_ptr<PixelShader> _pixelShader;
-
-	//SRV (Shader Resource View)
-	shared_ptr<Texture> _texture;
-	shared_ptr<SamplerState> _samplerState;
-	shared_ptr<BlendState> _blendState;
 
 private:
-	// SRT (Scale Rotation Translation)
-	TransformData _transformData;
-	shared_ptr<ConstantBuffer<TransformData>> _constantBuffer;
-
-	Vec3 _localPosition = { 0.f, 0.f, 0.f };
-	Vec3 _localRotation = { 0.f, 0.f, 0.f };
-	Vec3 _localScale = { 1.f, 1.f, 1.f };
+	shared_ptr<InputManager> _input;
+	shared_ptr<TimeManager> _time;
+	shared_ptr<SceneManager> _scene;
+	shared_ptr<ResourceManager> _resource;
+	shared_ptr<RenderManager> _render;
 };
+
+extern unique_ptr<Game> GGame;
 
