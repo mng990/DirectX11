@@ -15,4 +15,4 @@
 
 -----
 ### 구성도
-[제목 없는 프레젠테이션 (1)](https://github.com/mng990/DirectX11/assets/62287856/31d0246c-af0c-44f0-b386-d12a83b46a3a)
+![제목 없는 프레젠테이션 (1)](https://github.com/mng990/DirectX11/assets/62287856/31d0246c-af0c-44f0-b386-d12a83b46a3a)
