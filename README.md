@@ -15,4 +15,5 @@
 
 -----
 ### 구성도
-![제목 없는 프레젠테이션 (2)](https://github.com/mng990/DirectX11/assets/62287856/b460dee3-fe6b-43d3-9933-2a6a6f7f66e7)
+![directX2D_engine](https://github.com/mng990/DirectX11/assets/62287856/e412d02b-fe96-4666-8241-525e07d0984f)
+
