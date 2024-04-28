@@ -91,14 +91,6 @@ void RenderManager::RenderObjects()
 		if (transform == nullptr) continue;
 
 		// SRT
-		
-		/*
-		Vec3 position = transform->GetLocalPosition();
-
-		position.x -= 0.001f;
-		position.y -= 0.001f;
-		transform->SetLocalPosition(position);
-		*/
 	
 		_transformData.matWorld = transform->GetWorldMatrix();
 		PushTransformData();

@@ -51,9 +51,6 @@
     <Filter Include="소스 파일\00. Engine\Component\Animation">
       <UniqueIdentifier>{49272c36-cc1a-46fa-a832-cb8d356a2a82}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\00. Engine\Component\Camera">
-      <UniqueIdentifier>{6d1cf79d-5157-402c-bf0a-e2c732a8fea6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\00. Engine\Component\Rendering">
       <UniqueIdentifier>{68c69af1-f74c-41e2-86af-3598d299ae00}</UniqueIdentifier>
     </Filter>
@@ -83,6 +80,9 @@
     </Filter>
     <Filter Include="소스 파일\00. Engine\Manager\Resource">
       <UniqueIdentifier>{8fbe2780-18aa-43dc-8eab-3415f30a3eeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Engine\Component\Camera">
+      <UniqueIdentifier>{6d1cf79d-5157-402c-bf0a-e2c732a8fea6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
