@@ -14,6 +14,6 @@
 8. Animation 추가
 
 -----
-### 구성도
+### 📝 구성도
 ![directX2D_engine](https://github.com/mng990/DirectX11/assets/62287856/e412d02b-fe96-4666-8241-525e07d0984f)
 
